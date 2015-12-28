@@ -1,27 +1,53 @@
-apply plugin: 'gradlefx'
-
 buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
     dependencies {
-        classpath 'org.gradlefx:gradlefx:0.8.3'
+        //classpath 'org.gradlefx:gradlefx:0.8.3'
+        classpath group: 'org.gradlefx', name: 'gradlefx', version: '1.3.2'
     }
 }
 
-dependencies {
-    merged 'ru.rcslabs.webcall:client-core-swc:2.2.0-SNAPSHOT@swc'
-    merged 'com.bit101:minimalcomps:1.0@swc'
-}
 
+apply plugin: 'gradlefx'
 type = 'swf'
+version = '1.0-SNAPSHOT'
+
 srcDirs	= ['src']
 frameworkLinkage = 'merged'
 mainClass = 'MEDIA2JS.as'
 output = 'MEDIA2JS'
+
+
+repositories {
+  mavenCentral()
+  ivy {
+    name 'Apache Flex'
+    // pattern for url http://archive.apache.org/dist/flex/4.9.0/binaries/apache-flex-sdk-4.9.0-bin.zip
+    artifactPattern 'http://archive.apache.org/dist/flex/[revision]/binaries/[module]-[revision]-bin.[ext]'
+  }
+}
+
+dependencies {
+  // TODO: ext tar.gz for linux
+  flexSDK group: 'org.apache', name: 'apache-flex-sdk', version: '4.9.0', ext: 'zip'
+
+
+  //merged 'ru.rcslabs.webcall:client-core-swc:2.2.0-SNAPSHOT@swc'
+  //merged 'com.bit101:minimalcomps:1.0@swc'
+  merged files('deps/MinimalComps.swc', 'deps/client-core-swc-2.2.0-SNAPSHOT.swc')
+}
+
+sdkAutoInstall {
+	showPrompts	= false
+}
 
 additionalCompilerOptions = [
   	'-target-player=11.1',
   	'-swf-version=14',
   	'-debug=false',
   	'-incremental=false',
-  	"-define+=WEBCALL::APP_VERSION,'${version}-${project.ext.revision}'"
+  	//"-define+=WEBCALL::APP_VERSION,'${version}-${project.ext.revision}'"
+    "-define+=WEBCALL::APP_VERSION,'2-2'"
 ]
-
